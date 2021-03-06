@@ -25,7 +25,7 @@ function fetchTxs(api,blockNum,endBlockNum,cb) {
             erroredTxs = 0
         }
         let ops = []
-        for (let i = 0; i < newBlock.data.txs.length; i++) {
+        for (let i = 0; i < newBlock.data.txs.length; i++) if (newBlock.data.txs[i].type !== javalon.TransactionType.ENABLE_NODE) {
             ops.push((callback) => {
                 let newTx = {
                     type: newBlock.data.txs[i].type,
@@ -54,16 +54,18 @@ function fetchTxs(api,blockNum,endBlockNum,cb) {
 function streamTxs() {
     let streamer = new AvalonStreamer(config.source_api,true)
     streamer.streamTransactions((txns) => {
-        let newTx = {
-            type: txns.type,
-            data: txns.data
-        }
-        let resignedTx = javalon.sign(config.resigner_key,txns.sender,newTx)
-        javalon.sendRawTransaction(resignedTx,(e) => {
-            if (!e) {
-                console.log('rebroadcasted tx type',newTx.type,'by',txns.sender)
+        if (txns.type !== javalon.TransactionType.ENABLE_NODE) {
+            let newTx = {
+                type: txns.type,
+                data: txns.data
             }
-        })
+            let resignedTx = javalon.sign(config.resigner_key,txns.sender,newTx)
+            javalon.sendRawTransaction(resignedTx,(e) => {
+                if (!e) {
+                    console.log('rebroadcasted tx type',newTx.type,'by',txns.sender)
+                }
+            })
+        }
     })
 }
 
