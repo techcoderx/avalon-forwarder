@@ -36,7 +36,7 @@ module.exports = class {
 
     streamTransactions(cb) {
         this.streamBlocks((newBlock) => {
-            newBlock.txs.forEach(txn => cb(txn))
+            newBlock.txs.forEach(txn => cb(txn,newBlock._id))
         })
     }
 }

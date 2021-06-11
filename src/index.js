@@ -58,7 +58,7 @@ function fetchTxs(api,blockNum,endBlockNum,cb) {
 // stream
 function streamTxs() {
     let streamer = new AvalonStreamer(config.source_api,true)
-    streamer.streamTransactions((txns) => {
+    streamer.streamTransactions((txns,blockNum) => {
         if (!ExcludedTxTypes.includes(txns.type)) {
             let newTx = {
                 type: txns.type,
@@ -67,7 +67,7 @@ function streamTxs() {
             let resignedTx = javalon.sign(config.resigner_key,txns.sender,newTx)
             javalon.sendRawTransaction(resignedTx,(e) => {
                 if (!e) {
-                    console.log('rebroadcasted tx type',newTx.type,'by',txns.sender)
+                    console.log('rebroadcasted tx type',newTx.type,'by',txns.sender,'from source block',blockNum)
                 }
             })
         }
