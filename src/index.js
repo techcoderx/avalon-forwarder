@@ -3,6 +3,11 @@ const config = require('./config')
 const axios = require('axios')
 const javalon = require('javalon')
 const series = require('run-series')
+const ExcludedTxTypes = [
+    javalon.TransactionType.ENABLE_NODE,
+    javalon.TransactionType.APPROVE_NODE_OWNER,
+    javalon.TransactionType.DISAPROVE_NODE_OWNER
+]
 
 javalon.init({api: config.destination_api})
 
@@ -54,7 +59,7 @@ function fetchTxs(api,blockNum,endBlockNum,cb) {
 function streamTxs() {
     let streamer = new AvalonStreamer(config.source_api,true)
     streamer.streamTransactions((txns) => {
-        if (txns.type !== javalon.TransactionType.ENABLE_NODE) {
+        if (!ExcludedTxTypes.includes(txns.type)) {
             let newTx = {
                 type: txns.type,
                 data: txns.data
