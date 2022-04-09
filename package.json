@@ -1,7 +1,7 @@
 {
   "name": "avalon-forwarder",
   "version": "1.0.0",
-  "description": "",
+  "description": "Rebroadcasts Avalon mainnet transactions to testnet",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,9 +9,9 @@
   "author": "techcoderx",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.21.1",
-    "javalon": "^1.0.30",
+    "axios": "^0.26.1",
+    "javalon": "^1.0.34",
     "run-series": "^1.1.9",
-    "yargs": "^16.2.0"
+    "yargs": "^17.4.1"
   }
 }
